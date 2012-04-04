@@ -27,21 +27,6 @@ var config = require('optimist')
 	})
 	.argv
 ;
-
-var caloriesPerGram = {
-	fat		: 9,
-	protein	: 4,
-	carb	: 4,
-	alcohol	: 7,
-};
-var harrisBenedictMultiplier = [
-	1.0,	// Disable Multiplier
-	1.2,	// Sedentary
-	1.375,	// Lightly Active
-	1.55,	// Moderately Active
-	1.725,	// Very Active
-	1.9		// Extremely Active
-];
 function getBMR() {
 	"use strict";
 	switch(config.gender) {
@@ -51,20 +36,55 @@ function getBMR() {
 			return (66 + (13.7 * config.mass) + (5.0 * config.height) - (6.8 * config.age));
 	}
 }
-var maintenance = Math.round(getBMR() * harrisBenedictMultiplier[config.activity]);
-var minCalories = maintenance - 1000;
-var maxCalories = maintenance - 500;
-var minCarbCalories = 0;
-var maxCarbCalories = Math.round((maxCalories * 0.05) / caloriesPerGram.carb);
-var minProteinGrams = Math.round((config.mass * 2.2) * (1 - (config.fat/100)));
-var minProteinCalories = minProteinGrams * caloriesPerGram.protein;
-var minFatCalories = ((minCalories - minProteinCalories) - maxCarbCalories);
-var maxFatCalories = (maxCalories - minProteinCalories);
-var minFatGrams = Math.round(minFatCalories / caloriesPerGram.fat);
-var maxFatGrams = Math.round(maxFatCalories / caloriesPerGram.fat);
+var harrisBenedictMultiplier = [
+	1.0,	// Disable Multiplier
+	1.2,	// Sedentary
+	1.375,	// Lightly Active
+	1.55,	// Moderately Active
+	1.725,	// Very Active
+	1.9		// Extremely Active
+];
+var caloriesPerGram = {
+	fat		: 9,
+	protein	: 4,
+	carb	: 4,
+	alcohol	: 7,
+};
+function IntakeModel() {
+	"use strict";
+	this.calories = {
+		maintenance	: 0,
+		minimum		: 0,
+		maximum		: 0
+	};
+	this.carbs = {
+		minimum	: 0,
+		maximum	: 0
+	};
+	this.protein = {
+		minimum	: 0
+	};
+	this.fat = {
+		minimum	: 0,
+		maximum	: 0
+	}
+	this.init = function() {
+		this.calories.maintenance	= Math.round(getBMR() * harrisBenedictMultiplier[config.activity]),
+		this.calories.minimum		= this.calories.maintenance - 1000,
+		this.calories.maximum		= this.calories.maintenance - 500
+		this.carbs.minimum = 0;
+		this.carbs.maximum = Math.round((this.calories.maximum * 0.05) / caloriesPerGram.carb);
+		this.protein.minimum = Math.round((config.mass * 2.2) * (1 - (config.fat/100)));
+		this.fat.minimum = Math.round(((this.calories.minimum - (this.protein.minimum * caloriesPerGram.protein)) - (this.carbs.maximum * caloriesPerGram.carb)) / caloriesPerGram.fat);
+		this.fat.maximum = Math.round((this.calories.maximum - (this.protein.minimum * caloriesPerGram.protein)) / caloriesPerGram.fat);
+	};
+	this.init();
+}
+
+var intake = new IntakeModel();
 console.log('Diet Plan: '
-	+ '\n\tCalories: ' + minCalories + ' to ' + maxCalories 
-	+ '\n\tProtein: ' + minProteinGrams + ' grams (' + minProteinCalories + ' calories)' 
-	+ '\n\tCarb: ' + minCarbCalories + ' to ' + maxCarbCalories + ' grams' 
-	+ '\n\tFat: ' + minFatGrams + ' to ' + maxFatGrams + ' grams (' + minFatCalories + ' to ' + maxFatCalories + ' calories)'
+	+ '\n\tCalories: ' + intake.calories.minimum + ' to ' + intake.calories.maximum
+	+ '\n\tProtein: ' + intake.protein.minimum + ' grams (' + ( intake.protein.minimum * caloriesPerGram.protein ) + ' calories)' 
+	+ '\n\tCarb: ' + intake.carbs.minimum + ' to ' + intake.carbs.maximum + ' grams' 
+	+ '\n\tFat: ' + intake.fat.minimum + ' to ' + intake.fat.maximum + ' grams (' + ( intake.fat.minimum * caloriesPerGram.fat ) + ' to ' + ( intake.fat.maximum * caloriesPerGram.fat ) + ' calories)'
 );
