@@ -23,7 +23,7 @@ var config = require('optimist')
 	})
 	.options('activity', {
 		alias	: 'A',
-		default	: 0
+		default	: 1
 	})
 	.argv
 ;
