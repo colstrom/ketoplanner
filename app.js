@@ -29,6 +29,10 @@ var config = require('optimist')
 		alias	: 'r',
 		default	: 2
 	})
+	.options('meals', {
+		alias	: 'M',
+		default	: 3
+	})
 	.argv
 ;
 function getBMR() {
@@ -86,9 +90,17 @@ function IntakeModel() {
 }
 
 var intake = new IntakeModel();
-console.log('Diet Plan: '
-	+ '\n\tCalories: ' + intake.calories.minimum + ' to ' + intake.calories.maximum
-	+ '\n\tProtein: ' + intake.protein.minimum + ' grams (' + ( intake.protein.minimum * caloriesPerGram.protein ) + ' calories)' 
-	+ '\n\tCarb: ' + intake.carbs.minimum + ' to ' + intake.carbs.maximum + ' grams' 
-	+ '\n\tFat: ' + intake.fat.minimum + ' to ' + intake.fat.maximum + ' grams (' + ( intake.fat.minimum * caloriesPerGram.fat ) + ' to ' + ( intake.fat.maximum * caloriesPerGram.fat ) + ' calories)'
-);
+function showPlan(meals) {
+	console.log('\t' + 'Calories: ' + Math.round(intake.calories.minimum / meals) + ' to ' + Math.round(intake.calories.maximum / meals));
+	console.log('\t' + 'Protein: ' + Math.round(intake.protein.minimum / meals) + ' grams (' + Math.round(( intake.protein.minimum * caloriesPerGram.protein ) / meals) + ' calories)' );
+	console.log('\t' + 'Carb: ' + Math.round(intake.carbs.minimum / meals) + ' to ' + Math.round(intake.carbs.maximum / meals) + ' grams' );
+	console.log('\t' + 'Fat: ' + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
+};
+
+console.log('Totals for Today\n');
+showPlan(1);
+
+if ( config.meals > 1 ) {
+	console.log('\nMeal Plan (each of ' + config.meals + ' meals should contain...)\n');
+	showPlan(config.meals);
+}
