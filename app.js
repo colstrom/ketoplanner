@@ -25,6 +25,10 @@ var config = require('optimist')
 		alias	: 'A',
 		default	: 1
 	})
+	.options('rate', {
+		alias	: 'r',
+		default	: 2
+	})
 	.argv
 ;
 function getBMR() {
@@ -70,8 +74,8 @@ function IntakeModel() {
 	}
 	this.init = function() {
 		this.calories.maintenance	= Math.round(getBMR() * harrisBenedictMultiplier[config.activity]),
-		this.calories.minimum		= this.calories.maintenance - 1000,
-		this.calories.maximum		= this.calories.maintenance - 500
+		this.calories.minimum		= this.calories.maintenance - ( 500 * config.rate ),
+		this.calories.maximum		= this.calories.maintenance - ( 250 * config.rate )
 		this.carbs.minimum = 0;
 		this.carbs.maximum = Math.round((this.calories.maximum * 0.05) / caloriesPerGram.carb);
 		this.protein.minimum = Math.round((config.mass * 2.2) * (1 - (config.fat/100)));
