@@ -1,12 +1,33 @@
 #!/usr/bin/env node
-var user = {
-	mass		: 132.5,	// in Kg
-	height		: 186,		// in cm
-	fatPercent	: 35.1,
-	gender		: 1,		// 0:F | 1:M
-	age			: 26,
-	activity	: 0			// 0-4, using the Harris Benedict Equation.
-};
+
+var config = require('optimist')
+	.options('mass', {
+		alias	: 'm',
+		default	: 132.5	// in Kg
+	})
+	.options('height', {
+		alias	: 'h',
+		default	: 186	// in cm
+	})
+	.options('fat', {
+		alias	: 'f',
+		default	: 35.1
+	})
+	.options('gender', {
+		alias	: 'g',
+		default	: 1	// 0:F | 1:M
+	})
+	.options('age', {
+		alias	: 'a',
+		default	: 26
+	})
+	.options('activity', {
+		alias	: 'A',
+		default	: 0
+	})
+	.argv
+;
+
 var caloriesPerGram = {
 	fat		: 9,
 	protein	: 4,
@@ -21,21 +42,21 @@ var harrisBenedictMultiplier = [
 	1.725,	// Very Active
 	1.9		// Extremely Active
 ];
-function getBMR(userObj) {
+function getBMR() {
 	"use strict";
-	switch(userObj.gender) {
+	switch(config.gender) {
 		case 0:
-			return (655 + (9.6 * userObj.mass) + (1.8 * userObj.height) - (4.7 * userObj.age));
+			return (655 + (9.6 * config.mass) + (1.8 * config.height) - (4.7 * config.age));
 		case 1:
-			return (66 + (13.7 * userObj.mass) + (5.0 * userObj.height) - (6.8 * userObj.age));
+			return (66 + (13.7 * config.mass) + (5.0 * config.height) - (6.8 * config.age));
 	}
 }
-var maintenance = Math.round(getBMR(user) * harrisBenedictMultiplier[user.activity]);
+var maintenance = Math.round(getBMR() * harrisBenedictMultiplier[config.activity]);
 var minCalories = maintenance - 1000;
 var maxCalories = maintenance - 500;
 var minCarbCalories = 0;
 var maxCarbCalories = Math.round((maxCalories * 0.05) / caloriesPerGram.carb);
-var minProteinGrams = Math.round((user.mass * 2.2) * (1 - (user.fatPercent/100)));
+var minProteinGrams = Math.round((config.mass * 2.2) * (1 - (config.fat/100)));
 var minProteinCalories = minProteinGrams * caloriesPerGram.protein;
 var minFatCalories = ((minCalories - minProteinCalories) - maxCarbCalories);
 var maxFatCalories = (maxCalories - minProteinCalories);
