@@ -9,8 +9,8 @@ var config = require('optimist')
 		alias	: 'h',
 		default	: 186
 	})
-	.options('fat', {
-		alias	: 'f',
+	.options('bodyfat', {
+		alias	: 'b',
 		default	: 35.1
 	})
 	.options('gender', {
@@ -32,6 +32,22 @@ var config = require('optimist')
 	.options('meals', {
 		alias	: 'M',
 		default	: 3
+	})
+	.options('calories', {
+		alias	: 'K',
+		default	: 0
+	})
+	.options('protein', {
+		alias	: 'P',
+		default	: 0
+	})
+	.options('carbs', {
+		alias	: 'C',
+		default	: 0
+	})
+	.options('fat', {
+		alias	: 'F',
+		default	: 0
 	})
 	.boolean('help')
 	.argv
@@ -76,16 +92,16 @@ function IntakeModel() {
 	this.fat = {
 		minimum	: 0,
 		maximum	: 0
-	}
+	};
 	this.init = function() {
-		this.calories.maintenance	= Math.round(getBMR() * harrisBenedictMultiplier[config.activity]),
-		this.calories.minimum		= this.calories.maintenance - ( 500 * config.rate ),
-		this.calories.maximum		= this.calories.maintenance - ( 250 * config.rate )
-		this.carbs.minimum = 0;
-		this.carbs.maximum = Math.round((this.calories.maximum * 0.05) / caloriesPerGram.carb);
-		this.protein.minimum = Math.round((config.mass * 2.2) * (1 - (config.fat/100)));
-		this.fat.minimum = Math.round(((this.calories.minimum - (this.protein.minimum * caloriesPerGram.protein)) - (this.carbs.maximum * caloriesPerGram.carb)) / caloriesPerGram.fat);
-		this.fat.maximum = Math.round((this.calories.maximum - (this.protein.minimum * caloriesPerGram.protein)) / caloriesPerGram.fat);
+		this.calories.maintenance	= Math.round( ( getBMR() * harrisBenedictMultiplier[config.activity] ) - ( config.calories ? config.calories : 0 ) );
+		this.calories.minimum		= this.calories.maintenance - ( 500 * config.rate );
+		this.calories.maximum		= this.calories.maintenance - ( 250 * config.rate );
+		this.carbs.minimum			= 0;
+		this.carbs.maximum			= Math.round( ( ( this.calories.maximum * 0.05 ) / caloriesPerGram.carb ) - ( config.carbs ? config.carbs : 0 ) );
+		this.protein.minimum		= Math.round( ( ( config.mass * 2.2 ) * (1 - ( config.bodyfat / 100 ) ) ) - ( config.protein ? config.protein : 0 ) );
+		this.fat.minimum			= Math.round( ( ( ( this.calories.minimum - ( this.protein.minimum * caloriesPerGram.protein ) ) - ( this.carbs.maximum * caloriesPerGram.carb ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) );
+		this.fat.maximum			= Math.round( ( ( ( this.calories.maximum - ( this.protein.minimum * caloriesPerGram.protein ) ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) );
 	};
 	this.init();
 }
@@ -101,11 +117,15 @@ if ( config.help ) {
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
 		'\n\t-A | --activity  Activity level, from 1 (sedentary) to 5 (pro athlete), 0 to disable.',
 		'\n\t-a | --age       Age, in years.',
-		'\n\t-f | --fat       Bodyfat percentage, in decimal notation',
+		'\n\t-b | --bodyfat   Bodyfat percentage, in decimal notation.',
+		'\n\t-C | --carbs     Grams of protein consumed.',
+		'\n\t-F | --fat       Grams of fat consumed.',
 		'\n\t-g | --gender    Gender, 0 for female, 1 for male.',
 		'\n\t-h | --height    Height, in centimeters.',
+		'\n\t-K | --calories  Kilocalories consumed already.',
 		'\n\t-M | --meals     Meals per day.',
 		'\n\t-m | --mass      Mass, in kilograms.',
+		'\n\t-P | --protein   Grams of protein consumed.',
 		'\n\t-r | --rate      Rate of loss, in pounds per week.'
 	);
 } else {
