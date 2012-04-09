@@ -113,7 +113,7 @@ function showPlan(meals) {
 	console.log('\t' + 'Fat: ' + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
 };
 if ( config.help ) {
-	console.log('Diet Planner v2012.04.09',
+	console.log('Keto Planner v1.0 (2012-04-09)',
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
 		'\n\t-A | --activity  Activity level, from 1 (sedentary) to 5 (pro athlete), 0 to disable.',
 		'\n\t-a | --age       Age, in years.',
