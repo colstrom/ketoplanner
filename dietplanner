@@ -113,12 +113,12 @@ function showPlan(meals) {
 	console.log('\t' + 'Fat: ' + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
 };
 if ( config.help ) {
-	console.log('Diet Planner v2012.04.04',
+	console.log('Diet Planner v2012.04.09',
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
 		'\n\t-A | --activity  Activity level, from 1 (sedentary) to 5 (pro athlete), 0 to disable.',
 		'\n\t-a | --age       Age, in years.',
 		'\n\t-b | --bodyfat   Bodyfat percentage, in decimal notation.',
-		'\n\t-C | --carbs     Grams of protein consumed.',
+		'\n\t-C | --carbs     Grams of carbohydrates consumed.',
 		'\n\t-F | --fat       Grams of fat consumed.',
 		'\n\t-g | --gender    Gender, 0 for female, 1 for male.',
 		'\n\t-h | --height    Height, in centimeters.',
