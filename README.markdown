@@ -94,4 +94,4 @@ Your current mass, in kilograms.
 Amount of protein already consumed, in grams.
 
 ### -r (--rate) ###
-Your desired rate of loss, in pounds per week. (*This is a bug. It should be kilograms*)
+Your desired rate of loss, in kilograms per week.

@@ -50,7 +50,7 @@ var config = require('optimist')
 	})
 	.options('rate', {
 		alias	: 'r',
-		default	: 2
+		default	: 1
 	})
 	.options('meals', {
 		alias	: 'M',
@@ -118,8 +118,8 @@ function IntakeModel() {
 	};
 	this.init = function() {
 		this.calories.maintenance	= Math.round( ( getBMR() * harrisBenedictMultiplier[config.activity] ) - ( config.calories ? config.calories : 0 ) );
-		this.calories.minimum		= this.calories.maintenance - ( 500 * config.rate );
-		this.calories.maximum		= this.calories.maintenance - ( 250 * config.rate );
+		this.calories.minimum		= this.calories.maintenance - ( 1100 * config.rate );
+		this.calories.maximum		= this.calories.maintenance - ( 550 * config.rate );
 		this.carbs.minimum			= 0;
 		this.carbs.maximum			= Math.round( ( ( this.calories.maximum * 0.05 ) / caloriesPerGram.carb ) - ( config.carbs ? config.carbs : 0 ) );
 		this.protein.minimum		= Math.round( ( ( config.mass * 2.2 ) * (1 - ( config.bodyfat / 100 ) ) ) - ( config.protein ? config.protein : 0 ) );
@@ -130,13 +130,15 @@ function IntakeModel() {
 }
 
 function showPlan(meals) {
+    "use strict";
 	console.log('\t' + 'Calories: ' + Math.round(intake.calories.minimum / meals) + ' to ' + Math.round(intake.calories.maximum / meals));
-	console.log('\t' + 'Protein: ' + Math.round(intake.protein.minimum / meals) + ' grams (' + Math.round(( intake.protein.minimum * caloriesPerGram.protein ) / meals) + ' calories)' );
-	console.log('\t' + 'Carb: ' + Math.round(intake.carbs.minimum / meals) + ' to ' + Math.round(intake.carbs.maximum / meals) + ' grams' );
-	console.log('\t' + 'Fat: ' + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
-};
+	console.log('\t' + 'Protein: '  + Math.round(intake.protein.minimum / meals) + ' grams (' + Math.round(( intake.protein.minimum * caloriesPerGram.protein ) / meals) + ' calories)' );
+	console.log('\t' + 'Carb: '     + Math.round(intake.carbs.minimum / meals) + ' to ' + Math.round(intake.carbs.maximum / meals) + ' grams' );
+	console.log('\t' + 'Fat: '      + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
+}
+
 if ( config.help ) {
-	console.log('KetoPlanner v1.0 (2012-04-09)',
+	console.log('KetoPlanner v1.0 (2012-04-10)',
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
 		'\n\t-A | --activity  Activity level, from 1 (sedentary) to 5 (pro athlete), 0 to disable.',
 		'\n\t-a | --age       Age, in years.',
@@ -149,7 +151,7 @@ if ( config.help ) {
 		'\n\t-M | --meals     Meals per day.',
 		'\n\t-m | --mass      Mass, in kilograms.',
 		'\n\t-P | --protein   Grams of protein consumed.',
-		'\n\t-r | --rate      Rate of loss, in pounds per week.'
+		'\n\t-r | --rate      Rate of loss, in kilograms per week.'
 	);
 } else {
 	var intake = new IntakeModel();
