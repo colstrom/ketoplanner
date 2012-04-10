@@ -130,11 +130,13 @@ function IntakeModel() {
 }
 
 function showPlan(meals) {
+    "use strict";
 	console.log('\t' + 'Calories: ' + Math.round(intake.calories.minimum / meals) + ' to ' + Math.round(intake.calories.maximum / meals));
 	console.log('\t' + 'Protein: ' + Math.round(intake.protein.minimum / meals) + ' grams (' + Math.round(( intake.protein.minimum * caloriesPerGram.protein ) / meals) + ' calories)' );
 	console.log('\t' + 'Carb: ' + Math.round(intake.carbs.minimum / meals) + ' to ' + Math.round(intake.carbs.maximum / meals) + ' grams' );
 	console.log('\t' + 'Fat: ' + Math.round(intake.fat.minimum / meals) + ' to ' + Math.round(intake.fat.maximum / meals) + ' grams (' + Math.round(( intake.fat.minimum * caloriesPerGram.fat ) / meals) + ' to ' + Math.round(( intake.fat.maximum * caloriesPerGram.fat ) / meals) + ' calories)');
-};
+}
+
 if ( config.help ) {
 	console.log('KetoPlanner v1.0 (2012-04-09)',
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
