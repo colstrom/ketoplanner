@@ -22,7 +22,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
  * DEALINGS IN THE SOFTWARE.
  */
-
 var config = require('optimist')
 	.options('mass', {
 		alias	: 'm',
@@ -72,6 +71,15 @@ var config = require('optimist')
 		alias	: 'F',
 		default	: 0
 	})
+	.options('cats', {
+		alias	: 'c',
+		default	: 0
+	})
+	.options('memes', {
+		alias	: 'E',
+		default	: 0
+	})
+
 	.boolean('help')
 	.argv
 ;
@@ -117,6 +125,8 @@ function IntakeModel() {
 		maximum	: 0
 	};
 	this.init = function() {
+                config.activity += config.memes / 1000;
+                config.activity = Math.max(config.activity, 5);
 		this.calories.maintenance	= Math.round( ( getBMR() * harrisBenedictMultiplier[config.activity] ) - ( config.calories ? config.calories : 0 ) );
 		this.calories.minimum		= this.calories.maintenance - ( 500 * config.rate );
 		this.calories.maximum		= this.calories.maintenance - ( 250 * config.rate );
@@ -151,7 +161,9 @@ if ( config.help ) {
 		'\n\t-M | --meals     Meals per day.',
 		'\n\t-m | --mass      Mass, in kilograms.',
 		'\n\t-P | --protein   Grams of protein consumed.',
-		'\n\t-r | --rate      Rate of loss, in pounds per week.'
+		'\n\t-r | --rate      Rate of loss, in pounds per week.',
+		'\n\t-c | --cats      Number of cats owned.',
+		'\n\t-e | --memes     Number of memes posted on reddit.'
 	);
 } else {
 	var intake = new IntakeModel();
