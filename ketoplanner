@@ -138,7 +138,7 @@ function showPlan(meals) {
 }
 
 if ( config.help ) {
-	console.log('KetoPlanner v1.0 (2012-04-10)',
+	console.log('KetoPlanner v1.0.2 (2012-04-16)',
 		'\tby Chris Olstrom <chris@olstrom.com>\n',
 		'\n\t-A | --activity  Activity level, from 1 (sedentary) to 5 (pro athlete), 0 to disable.',
 		'\n\t-a | --age       Age, in years.',
