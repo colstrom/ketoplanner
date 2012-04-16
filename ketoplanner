@@ -120,11 +120,11 @@ function IntakeModel() {
 		this.calories.maintenance	= Math.round( ( getBMR() * harrisBenedictMultiplier[config.activity] ) - ( config.calories ? config.calories : 0 ) );
 		this.calories.minimum		= this.calories.maintenance - ( 1100 * config.rate );
 		this.calories.maximum		= this.calories.maintenance - ( 550 * config.rate );
-		this.carbs.minimum			= 0;
-		this.carbs.maximum			= Math.max(0,Math.round( ( ( this.calories.maximum * 0.05 ) / caloriesPerGram.carb ) - ( config.carbs ? config.carbs : 0 ) ) );
+		this.carbs.minimum		= 0;
+		this.carbs.maximum		= Math.max(0,Math.round( ( ( this.calories.maximum * 0.05 ) / caloriesPerGram.carb ) - ( config.carbs ? config.carbs : 0 ) ) );
 		this.protein.minimum		= Math.max(0,Math.round( ( ( config.mass * 2.2 ) * (1 - ( config.bodyfat / 100 ) ) ) - ( config.protein ? config.protein : 0 ) ) );
-		this.fat.minimum			= Math.max(0,Math.round( ( ( ( this.calories.minimum - ( this.protein.minimum * caloriesPerGram.protein ) ) - ( this.carbs.maximum * caloriesPerGram.carb ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) ) );
-		this.fat.maximum			= Math.max(0,Math.round( ( ( ( this.calories.maximum - ( this.protein.minimum * caloriesPerGram.protein ) ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) ) );
+		this.fat.minimum		= Math.max(0,Math.round( ( ( ( this.calories.minimum - ( this.protein.minimum * caloriesPerGram.protein ) ) - ( this.carbs.maximum * caloriesPerGram.carb ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) ) );
+		this.fat.maximum		= Math.max(0,Math.round( ( ( ( this.calories.maximum - ( this.protein.minimum * caloriesPerGram.protein ) ) ) / caloriesPerGram.fat ) - ( config.fat ? config.fat : 0 ) ) );
 	};
 	this.init();
 }
