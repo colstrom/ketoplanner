@@ -26,7 +26,7 @@
 var config = require('optimist')
 	.options('mass', {
 		alias	: 'm',
-		default	: 126
+		default	: 119.3
 	})
 	.options('height', {
 		alias	: 'h',
@@ -34,7 +34,7 @@ var config = require('optimist')
 	})
 	.options('bodyfat', {
 		alias	: 'b',
-		default	: 31.2
+		default	: 32
 	})
 	.options('gender', {
 		alias	: 'g',
